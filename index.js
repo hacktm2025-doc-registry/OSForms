@@ -1,16 +1,27 @@
 const express = require("express");
+const bodyParser = require('body-parser');
+const passport = require('passport');
 const { connect, disconnect } = require("./db/db"); // Assuming db.js is in the db folder
+
+const unprotectedRoutes = require('./routes/unprotected');
+const authRoutes = require('./routes/auth');
+const dashboardRoutes = require('./routes/dashboard');
+
+
 const app = express();
 const PORT = 3000;
 
 const db = connect(); // Initialize database connection
 // Middleware (optional)
 app.use(express.json());
+app.use(bodyParser.json());
 
-// Routes
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+require('./config/passport')(passport);
+app.use(passport.initialize());
+
+app.use('/', unprotectedRoutes);
+app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // Start server
 app.listen(PORT, () => {

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require("mongoose");
-const User = require("./user.model"); // Assuming user.model.js is in the same directory
+const User = require("../models/user.model"); // Assuming user.model.js is in the same directory
 
 const uri = process.env.MONGODB_URI;
 
@@ -17,6 +17,7 @@ const connect = async () => {
       const newUser = new User({
         name: "TEST_ROB",
         email: "TEST_ROB",
+        password: "TEST_ROB",
         age: 25,
       });
       await newUser.save();
