@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const passport = require("passport");
@@ -49,9 +50,10 @@ router.post("/signup", async (req, res) => {
     }
 
     const randomString = crypto.randomBytes(16).toString("hex");
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
     const newUser = new User({
       email: email,
-      password: password,
+      password: hashedPassword,
       emailVerificationToken: randomString,
       role: isAdmin ? "admin" : "user", // Assuming role field exists in User model
       emailVerified: false, // Default to false until email is confirmed
@@ -101,7 +103,7 @@ router.post("/signin", async (req, res) => {
     const user = await User.findOne({ email: email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
     // const isMatch = await user.comparePassword(password);
-    const isMatch = password === user.password; // Simplified for demo; use bcrypt in production
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
