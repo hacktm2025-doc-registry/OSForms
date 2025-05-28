@@ -12,6 +12,15 @@ router.get(
   }
 );
 
+// Protected dashboard route
+router.get(
+  "/adminTokens",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({ message: `Welcome ${req.user.email}! This is your dashboard.` });
+  }
+);
+
 router.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
