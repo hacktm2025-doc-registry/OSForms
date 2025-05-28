@@ -23,12 +23,35 @@
 		},
 		{
 			"name": "SignUP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  const jsonData = pm.response.json();",
+							"  if (jsonData.emailVerificationToken) {",
+							"    pm.environment.set(\"emailVerificationToken\", jsonData.emailVerificationToken);",
+							"    console.log(\"✅ emailVerificationToken set:\", jsonData.emailVerificationToken);",
+							"  } else {",
+							"    console.warn(\"⚠️ emailVerificationToken not found in response\");",
+							"  }",
+							"} catch (e) {",
+							"  console.error(\"❌ Failed to parse JSON response\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\" : \"roberto\",\n    \"password\" : \"roberto\"\n}",
+					"raw": "{\n    \"email\" : \"roberto@rob.com\",\n    \"password\" : \"roberto\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -44,6 +67,30 @@
 					"path": [
 						"auth",
 						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/confirm?token={{emailVerificationToken}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"confirm"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{emailVerificationToken}}"
+						}
 					]
 				}
 			},
@@ -92,7 +139,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\" : \"roberto\",\n    \"password\" : \"roberto\"\n}",
+					"raw": "{\n    \"email\" : \"roberto@rob.com\",\n    \"password\" : \"roberto\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
