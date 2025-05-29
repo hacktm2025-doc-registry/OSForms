@@ -357,6 +357,66 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "[SECURE] Upload file",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/rosca/Downloads/dummy.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/upload",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] GET FILES",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/dashboard/files",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"files"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
