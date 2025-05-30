@@ -417,6 +417,77 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "[SECURE CKAN] Create CKAN user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"rob@rob.com\",\n    \"name\" : \"rob\",\n    \"password\" : \"rob12341234\",\n    \"fullname\" : \"rob rob\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/createUser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"createUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE CKAN] Get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"rob\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/getUser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"getUser"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -1,4 +1,5 @@
 
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "dotenv": "^16.5.0",

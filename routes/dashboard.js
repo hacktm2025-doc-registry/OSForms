@@ -7,6 +7,8 @@ const router = express.Router();
 
 const File = require("../models/file.model"); // Assuming file.model.js is in the same directory
 
+const { createUser, getUser } = require("../routes/ckan_api"); // Importing createUser function from ckan_api.js
+
 // Set storage engine for Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -88,6 +90,32 @@ router.get("/files", passport.authenticate("jwt", { session: false }), (req, res
       }))
     );
   });
+});
+
+router.get("/getUser", passport.authenticate("jwt", { session: false }), async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({ message: "Email and name are required" });
+  }
+  let result = await getUser(username);
+  if (!result) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  console.log("Result from CKAN API:", result);
+  return res.json({ user: result });
+});
+
+router.post("/createUser", passport.authenticate("jwt", { session: false }), async (req, res) => {
+  const { email, name, password, fullname } = req.body;
+  if (!email || !name) {
+    return res.status(400).json({ message: "Email and name are required" });
+  }
+  let result = await createUser({ email, name, password, fullname });
+  if (!result) {
+    return res.status(500).json({ message: "Failed to create user" });
+  }
+  console.log("Result from CKAN API:", result);
+  res.json({ message: "User created successfully" });
 });
 
 module.exports = router;
