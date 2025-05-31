@@ -1,5 +1,4 @@
 const express = require("express");
-const passport = require("passport");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -44,7 +43,6 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // Protected dashboard route
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     res.json({ message: `Welcome ${req.user.email}! This is your dashboard.` });
   }
@@ -52,14 +50,18 @@ router.get(
 
 router.get(
   "/profile",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({
+  async (req, res) => {
+    let {role} = req.body;
+    let user = await User.findOne({ role  : role });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({
       user: {
-        id: req.user._id,
-        email: req.user.email,
-        name: req.user.name || "No name provided",
-        profilePicture: req.user.profilePicture || "No profile picture",
+        id: user._id,
+        email: user.email,
+        name: user.name || "No name provided",
+        profilePicture: user.profilePicture || "No profile picture",
       },
     });
   }
@@ -68,7 +70,6 @@ router.get(
 // Route: Upload file
 router.post(
   "/upload",
-  passport.authenticate("jwt", { session: false }),
   upload.single("file"),
   async (req, res) => {
     // Check if file is provided
@@ -76,7 +77,7 @@ router.post(
     if (!file) return res.status(400).send("No file uploaded.");
     let dbFile = await File.create({
       name: file.filename,
-      createdBy: req.user.id, // Assuming req.user is populated by passport
+      createdBy: req.user.id,
     });
     if (!dbFile)
       return res.status(500).send("Could not save file info to database.");
@@ -91,7 +92,6 @@ router.post(
 
 router.get(
   "/files",
-  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const dirPath = path.join(require("os").homedir(), "backend", "uploads");
     fs.readdir(dirPath, (err, files) => {
@@ -106,21 +106,6 @@ router.get(
   }
 );
 
-router.get(
-  "/getUser",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    const { role } = req.body;
-    if (!role) {
-      return res.status(400).json({ message: "Role not provided" });
-    }
-    let result = await User.findOne({ role: role });
-    if (!result) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    return res.json({ user: result });
-  }
-);
 
 router.post("/submit_form", async (req, res) => {
   const { role, name, description, data } = req.body;
@@ -145,7 +130,7 @@ router.post("/submit_form", async (req, res) => {
       description: description || "", // Default to an empty string if no description is provided
       data: data || {}, // Default to an empty object if no data is provided
       workflowStepType: "dep_sef_review",
-      createdBy: petitioner._id, // Assuming req.user is populated by passport
+      createdBy: petitioner._id, 
       //append to docHistory
       docHistory: [
         {
@@ -265,6 +250,8 @@ router.post("/action", async (req, res) => {
     if (!petitioner) {
       return res.status(404).json({ message: "Petitioner not found" });
     }
+    console.log("Sending email...");
+
     send_email(
       petitioner.email,
       "Document Acknowledged",

@@ -9,14 +9,6 @@ router.get('/', (req, res) => {
     res.json({ message: 'Welcome to the unprotected route!' });
 })
 
-router.get('/adminToken', async (req, res) => {
-    let found = await AdminToken.findOne({});
-    if (!found) {
-        return res.status(404).json({ message: 'No admin token found' });
-    }
-    res.json({ token: found.token });
-})
-
 router.get('/confirm', async (req, res) => {
     let { token } = await req.query;
     if (!token) {

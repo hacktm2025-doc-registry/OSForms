@@ -77,18 +77,6 @@ const connect = async () => {
     await mongoose.connect(uri);
     console.log("✅ Connected to MongoDB Atlas");
 
-    const adminTokens = await AdminTokens.countDocuments();
-    console.log("✅ Admin tokens count:", adminTokens);
-    if (adminTokens === 0) {
-      let randomString = require("crypto").randomBytes(16).toString("hex");
-      console.log("❗ No admin tokens found, creating a new one.");
-      const newAdminToken = new AdminTokens({
-        token: randomString,
-      });
-      await newAdminToken.save();
-      console.log("✅ Admin token saved:", newAdminToken);
-    }
-
     const Roles = await Role.countDocuments();
     if (Roles === 0) {
       console.log("❗ No roles found, creating default roles.");
@@ -107,14 +95,14 @@ const connect = async () => {
       const users = default_users.map((user) => ({
         ...user,
         email: user.email.toLowerCase(), // Ensure email is lowercase
-        role: user.role || "user", // Default to 'user' if no role is specified
+        role: user.role || "user",
+        name: user.name // Default to 'user' if no role is specified
       }));
       await User.insertMany(users);
       console.log("✅ Default users created:", users);
     }
 
     await create_default_workflow();
-
     await create_default_document();
 
     console.log("✅ DB up an running!");
