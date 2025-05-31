@@ -1,0 +1,218 @@
+{
+    "display": "form",
+    "settings": {
+        "pdf": {
+            "id": "1ec0f8ee-6685-5d98-a847-26f67b67d6f0",
+            "src": "https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"
+        }
+    },
+    "components": [
+        {
+            "label": "User Type",
+            "defaultValue": "cetatean",
+            "key": "userType",
+            "type": "hidden",
+            "input": true,
+            "tableView": false
+        },
+        {
+            "label": "Decizii civil",
+            "tableView": false,
+            "validateWhenHidden": false,
+            "key": "container1",
+            "logic": [
+                {
+                    "name": "Disable",
+                    "trigger": {
+                        "type": "javascript",
+                        "javascript": "result = (data[\"userType\"] != \"cetatean\")"
+                    },
+                    "actions": [
+                        {
+                            "name": "Disable",
+                            "type": "property",
+                            "property": {
+                                "label": "Disabled",
+                                "value": "disabled",
+                                "type": "boolean"
+                            },
+                            "state": true
+                        }
+                    ]
+                }
+            ],
+            "type": "container",
+            "input": true,
+            "components": [
+                {
+                    "html": "<h2><strong>Formular pentru petiții online</strong></h2><p>&nbsp;</p><p><span style=\"background-color:rgb(255,255,255);color:rgb(98,113,141);\">Prezentul formular este destinat doar cererilor/sesizărilor/reclamațiilor/propunerilor formulate în temeiul Ordonanței Guvernului nr. 27/2002 privind reglementarea activității de soluționare a petițiilor.</span></p><p><span style=\"background-color:rgb(255,255,255);color:rgb(98,113,141);\">Timp estimat de completare: 5 minute</span></p>",
+                    "label": "Modal",
+                    "refreshOnChange": false,
+                    "key": "modal",
+                    "type": "content",
+                    "input": false,
+                    "tableView": false
+                },
+                {
+                    "label": "Text Field",
+                    "placeholder": "Numele și prenumele/denumirea organizației legal constituite",
+                    "applyMaskOn": "change",
+                    "hideLabel": true,
+                    "tableView": true,
+                    "validateWhenHidden": false,
+                    "key": "textField",
+                    "type": "textfield",
+                    "input": true
+                },
+                {
+                    "label": "Text Field",
+                    "placeholder": "Adresa de corespondență: județ, localitate, stradă, număr, bloc, scară, apartament",
+                    "applyMaskOn": "change",
+                    "hideLabel": true,
+                    "tableView": true,
+                    "validateWhenHidden": false,
+                    "key": "textField1",
+                    "type": "textfield",
+                    "input": true
+                },
+                {
+                    "label": "Email",
+                    "placeholder": "Email",
+                    "applyMaskOn": "change",
+                    "hideLabel": true,
+                    "tableView": true,
+                    "validateWhenHidden": false,
+                    "key": "email",
+                    "type": "textfield",
+                    "input": true
+                },
+                {
+                    "label": "Telefon",
+                    "placeholder": "Telefon (opțional)",
+                    "applyMaskOn": "change",
+                    "hideLabel": true,
+                    "tableView": true,
+                    "validateWhenHidden": false,
+                    "key": "telefon",
+                    "type": "textfield",
+                    "input": true
+                },
+                {
+                    "label": "Continut",
+                    "placeholder": "Conținutul petiției (maxim 1000 de caractere).",
+                    "applyMaskOn": "change",
+                    "autoExpand": false,
+                    "hideLabel": true,
+                    "showCharCount": true,
+                    "tableView": true,
+                    "validate": {
+                        "maxLength": 1000
+                    },
+                    "validateWhenHidden": false,
+                    "key": "continut",
+                    "type": "textarea",
+                    "input": true
+                },
+                {
+                    "label": "Upload",
+                    "hideLabel": true,
+                    "tableView": false,
+                    "storage": "base64",
+                    "dir": "./petitii/",
+                    "fileNameTemplate": "{{guid}}",
+                    "webcam": false,
+                    "capture": false,
+                    "fileTypes": [
+                        {
+                            "label": "",
+                            "value": ""
+                        }
+                    ],
+                    "validateWhenHidden": false,
+                    "key": "file",
+                    "type": "file",
+                    "input": true
+                },
+                {
+                    "html": "<p><i>Datele dumneavoastră personale sunt prelucrate de către Consiliul Județean Timiș în scopul soluționării cererii. În vederea realizării acestui scop, datele pot fi dezvăluite unor terți. Datele dumneavoastră sunt stocate pe perioada necesară îndeplinirii atribuțiilor, după care vor fi arhivate potrivit legislației aplicabile. Pentru exercitarea drepturilor prevăzute de Regulamentul (UE) nr. 679 din 27 aprilie 2016 privind protecția persoanelor fizice în ceea ce privește prelucrarea datelor cu caracter personal şi privind libera circulație a acestor date, persoanele ale căror date personale sunt prelucrate de către Consiliul Județean Timiș pot obține mai multe informații accesând următorul link: </i><a href=\"https://www.cjtimis.ro/informatii-publice/protectia-datelor-cu-caracter-personal/\"><i>https://www.cjtimis.ro/informatii-publice/protectia-datelor-cu-caracter-personal/</i></a></p>",
+                    "label": "Content",
+                    "refreshOnChange": false,
+                    "key": "content",
+                    "type": "content",
+                    "input": false,
+                    "tableView": false
+                }
+            ]
+        },
+        {
+            "label": "Istoric",
+            "hideLabel": false,
+            "tableView": false,
+            "validateWhenHidden": false,
+            "key": "container2",
+            "type": "container",
+            "input": true,
+            "components": []
+        },
+        {
+            "label": "Decizie",
+            "tableView": false,
+            "validateWhenHidden": false,
+            "key": "container",
+            "conditional": {
+                "show": false,
+                "when": "userType",
+                "eq": "cetatean"
+            },
+            "type": "container",
+            "input": true,
+            "components": [
+                {
+                    "label": "Decizie",
+                    "optionsLabelPosition": "right",
+                    "inline": true,
+                    "tableView": false,
+                    "values": [
+                        {
+                            "label": "Accepta",
+                            "value": "accepta",
+                            "shortcut": ""
+                        },
+                        {
+                            "label": "Refuza",
+                            "value": "refuza",
+                            "shortcut": ""
+                        }
+                    ],
+                    "validateWhenHidden": false,
+                    "key": "radio",
+                    "type": "radio",
+                    "input": true
+                },
+                {
+                    "label": "Motiv Refuz",
+                    "applyMaskOn": "change",
+                    "autoExpand": false,
+                    "tableView": true,
+                    "validateWhenHidden": false,
+                    "key": "motivRefuz",
+                    "conditional": {
+                        "show": true,
+                        "when": "radio",
+                        "eq": "refuza"
+                    },
+                    "type": "textarea",
+                    "input": true
+                }
+            ]
+        },
+        {
+            "type": "button",
+            "label": "Submit",
+            "key": "submit",
+            "disableOnInvalid": true,
+            "input": true,
+            "tableView": false
+        }
+    ]
+}

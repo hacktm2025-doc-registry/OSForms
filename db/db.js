@@ -13,6 +13,7 @@ const default_users = require("./default_users.json"); // Assuming default_users
 const default_roles = require("./default_roles.json"); // Assuming default_roles.json is in the same directory
 const default_workflow_steps_definition = require("./default_workflow_steps_definition.json"); // Assuming default_workflow_steps_definition.json is in the same directory
 const default_documents = require("./default_documents.json"); // Assuming default_documents.json is in the same directory
+const petitii_form = require("../forms/petitii.json");
 const uri = process.env.MONGODB_URI;
 
 const create_default_workflow = async () => {
@@ -47,12 +48,12 @@ const create_default_document = async () => {
     const documentExists = await Document.countDocuments();
     if (documentExists > 0) {
       console.log(
-        "✅ Default document templates already exist, skipping creation."
+        "✅ Default document already exist, skipping creation."
       );
       return;
     }
     console.log(
-      "❗ No document templates found, creating default document templates."
+      "❗ No document found, creating default document."
     );
     const defaultDocuments = default_documents.map((doc) => ({
       name: doc.name,
@@ -63,6 +64,35 @@ const create_default_document = async () => {
       createdBy: doc.createdBy || "system", // Default to 'system' if no creator is specified
     }));
     const defaultDocumentsInsert = await Document.insertMany(defaultDocuments);
+    console.log(
+      "✅ Default document created:",
+      defaultDocumentsInsert
+    );
+  } catch (err) {
+    console.error("❌ Error creating default document:", err);
+  }
+};
+
+const create_default_document_templates = async () => {
+  try {
+    const documentExists = await DocumentTemplates.countDocuments();
+    if (documentExists > 0) {
+      console.log(
+        "✅ Default document templates already exist, skipping creation."
+      );
+      return;
+    }
+    console.log(
+      "❗ No document templates found, creating default document templates."
+    );
+    const defaultDocumentsInsert = await DocumentTemplates.insertOne({
+      name: "Petitii",
+      permissions: ["read", "write", "delete"], // Default permissions
+      forms: "Petitii", // Assuming petitii_form is an array of form definitions
+      data: petitii_form, // Default to an empty object if no data is provided
+      workflowSteps: [], // Default to an empty array if no workflow steps are provided
+      createdAt: Date.now(), // Set the current date as createdAt
+    });
     console.log(
       "✅ Default document templates created:",
       defaultDocumentsInsert
@@ -104,6 +134,7 @@ const connect = async () => {
 
     await create_default_workflow();
     await create_default_document();
+    await create_default_document_templates();
 
     console.log("✅ DB up an running!");
   } catch (err) {

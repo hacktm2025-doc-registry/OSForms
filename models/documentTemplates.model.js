@@ -20,7 +20,7 @@ const documentTemplateSchema = new mongoose.Schema({
     type: Object
   },
   workflowSteps: {
-    type: String,
+    type: [String],
     required: true,
     default: [], // Default to an empty array if no workflow steps are provided
   },
