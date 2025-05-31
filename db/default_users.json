@@ -1,0 +1,42 @@
+[
+    {
+        "username": "user",
+        "email": "user@user.com",
+        "password": "user123",
+        "role": "user",
+        "emailVerified": "true",
+        "emailVerificationToken": "null"
+    },
+    {
+        "username": "sef_dep",
+        "email": "sef_dep@sef_dep.com",
+        "password": "sef_dep123",
+        "role": "sef_dep",
+        "emailVerified": "true",
+        "emailVerificationToken": "null"
+    },
+    {
+        "username": "sec_prim",
+        "email": "sec_prim@sec_prim.com",
+        "password": "sec_prim123",
+        "role": "sec_prim",
+        "emailVerified": "true",
+        "emailVerificationToken": "null"
+    },
+    {
+        "username": "primar",
+        "email": "primar@primar.com",
+        "password": "primar123",
+        "role": "primar",
+        "emailVerified": "true",
+        "emailVerificationToken": "null"
+    },
+    {
+        "username": "god",
+        "email": "god@god.com",
+        "password": "god123",
+        "role": "god",
+        "emailVerified": "true",
+        "emailVerificationToken": "null"
+    }
+]

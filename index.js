@@ -7,12 +7,13 @@ const unprotectedRoutes = require('./routes/unprotected');
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 
-
+const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
 const db = connect(); // Initialize database connection
 // Middleware (optional)
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 

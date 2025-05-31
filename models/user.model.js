@@ -23,9 +23,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  twofactorKey: {
+    type: String,
+    default: null,
+  },
+  twofactorExpires: {
+    type: Date,
+    default: Date.now() + 30 * 60 * 1000, // Default to 30 minutes from now
+  },
+  twofactorValidationToken: { type: String, default: null },
   role: {
     type: String,
-    enum: ["user", "admin"],
     default: "user",
   },
   profilePicture: {

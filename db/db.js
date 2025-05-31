@@ -1,37 +1,81 @@
-require('dotenv').config();
+require("dotenv").config();
 const mongoose = require("mongoose");
+
 const User = require("../models/user.model"); // Assuming user.model.js is in the same directory
 const AdminTokens = require("../models/adminTokens.model"); // Assuming adminTokens.model.js is in the same directory
+const Role = require("../models/role.model"); // Assuming role.model.js is in the same directory
+const DocumentTemplates = require("../models/documentTemplates.model"); // Assuming documentTemplates.model.js is in the same directory
+const Department = require("../models/departments.model"); // Assuming departments.model.js is in the same directory
+const WorkflowProcessEntity = require("../models/workflowProcessEntity.model"); // Assuming workflowProcess.model.js is in the same directory
+const Document = require("../models/documents.model"); // Assuming documents.model.js is in the same directory
 
+const default_users = require("./default_users.json"); // Assuming default_users.json is in the same directory
+const default_roles = require("./default_roles.json"); // Assuming default_roles.json is in the same directory
+const default_workflow_steps_definition = require("./default_workflow_steps_definition.json"); // Assuming default_workflow_steps_definition.json is in the same directory
+const default_documents = require("./default_documents.json"); // Assuming default_documents.json is in the same directory
 const uri = process.env.MONGODB_URI;
+
+const create_default_workflow = async () => {
+  try {
+    const workflowExists = await WorkflowProcessEntity.countDocuments();
+    if (workflowExists > 0) {
+      console.log("✅ Default workflow already exists, skipping creation.");
+      return;
+    }
+    console.log("❗ No workflow found, creating default workflow.");
+    const workflowSteps = default_workflow_steps_definition.map((step) => ({
+      step_name: step.step_name,
+      step_type: step.step_type || "standard", // Default to 'standard' if not specified
+      next_steps: step.next_steps || null, // Default to null if no next step is provided
+      proceed_to_next_step_event: step.proceed_to_next_step_event || "",
+      previous_step: step.previous_step || null, // Default to null if no previous step is provided
+      description: step.description || "",
+      roles: step.roles || [], // Ensure roles is an array
+    }));
+
+    const defaultWorkflow = await WorkflowProcessEntity.insertMany(
+      workflowSteps
+    );
+    console.log("✅ Default workflow created:", defaultWorkflow);
+  } catch (err) {
+    console.error("❌ Error creating default workflow:", err);
+  }
+};
+
+const create_default_document = async () => {
+  try {
+    const documentExists = await Document.countDocuments();
+    if (documentExists > 0) {
+      console.log("✅ Default document templates already exist, skipping creation.");
+      return;
+    }
+    console.log("❗ No document templates found, creating default document templates.");
+    const defaultDocuments = default_documents.map((doc) => ({
+      name: doc.name,
+      description: doc.description || "", // Default to an empty string if no description is provided
+      data: doc.data || {}, // Defa4ult to an empty object if no data is provided
+      createdAt: doc.createdAt || Date.now(), // Default to current date if not provided
+      workflowStepType: doc.workflowStepType || [], // Ensure permissions is an array   
+      createdBy: doc.createdBy || "system", // Default to 'system' if no creator is specified
+    }));
+    const defaultDocumentsInsert = await Document.insertMany(
+      defaultDocuments
+    );
+    console.log("✅ Default document templates created:", defaultDocumentsInsert);
+  } catch (err) {
+    console.error("❌ Error creating default document templates:", err);
+  }
+};
 
 const connect = async () => {
   try {
     await mongoose.connect(uri);
     console.log("✅ Connected to MongoDB Atlas");
 
-    const found = await User.findOne({ email: "TEST_ADMIN@admin.com" });
-    console.log("✅ User found:", found);
-    // Create and save a user
-    if (!found) {
-      console.log("❗ User not found, creating a new one.");
-      const newUser = new User({
-        name: "TEST_ROB",
-        email: "TEST_ADMIN@admin.com",
-        password: "TEST_ADMIN",
-        role: "admin",
-        emailVerified: true, // Assuming email is verified for this test user
-        emailVerificationToken: null, // No token needed for this test user
-        createdAt: new Date(),
-      });
-      await newUser.save();
-      console.log("✅ User saved:", newUser);
-    }
-
     const adminTokens = await AdminTokens.countDocuments();
     console.log("✅ Admin tokens count:", adminTokens);
     if (adminTokens === 0) {
-      let randomString = require('crypto').randomBytes(16).toString('hex');
+      let randomString = require("crypto").randomBytes(16).toString("hex");
       console.log("❗ No admin tokens found, creating a new one.");
       const newAdminToken = new AdminTokens({
         token: randomString,
@@ -40,6 +84,33 @@ const connect = async () => {
       console.log("✅ Admin token saved:", newAdminToken);
     }
 
+    const Roles = await Role.countDocuments();
+    if (Roles === 0) {
+      console.log("❗ No roles found, creating default roles.");
+      const roles = default_roles.map((role) => ({
+        ...role,
+        permissions: role.permissions || [], // Ensure permissions is an array
+      }));
+      await Role.insertMany(roles);
+      console.log("✅ Default roles created:", roles);
+    }
+
+    const Users = await User.countDocuments();
+    if (Users === 0) {
+      console.log("❗ No users found, creating default users.");
+      const users = default_users.map((user) => ({
+        ...user,
+        email: user.email.toLowerCase(), // Ensure email is lowercase
+        role: user.role || "user", // Default to 'user' if no role is specified
+      }));
+      await User.insertMany(users);
+      console.log("✅ Default users created:", users);
+    }
+
+    await create_default_workflow();
+
+    await create_default_document();
+
     console.log("✅ DB up an running!");
   } catch (err) {
     console.error("❌ Connection error:", err);
@@ -47,12 +118,12 @@ const connect = async () => {
 };
 
 const disconnect = async () => {
-    try {
-        await mongoose.disconnect();
-        console.log("✅ Disconnected from MongoDB Atlas");
-    } catch (err) {
-        console.error("❌ Disconnection error:", err);
-    }
-}
+  try {
+    await mongoose.disconnect();
+    console.log("✅ Disconnected from MongoDB Atlas");
+  } catch (err) {
+    console.error("❌ Disconnection error:", err);
+  }
+};
 
-module.exports = {connect, disconnect};
+module.exports = { connect, disconnect };
