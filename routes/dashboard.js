@@ -12,6 +12,7 @@ const { send_email } = require("../utils/helpers"); // Assuming helpers.js is in
 const User = require("../models/user.model"); // Assuming user.model.js is in the same directory
 const Document = require("../models/documents.model"); // Assuming documents.model.js is in the same directory
 const WorkflowEntity = require("../models/workflowProcessEntity.model"); // Assuming workflowProcessEntity.model.js is in the same directory
+const DocumentTemplate = require("../models/documentTemplates.model");
 
 // Set storage engine for Multer
 const storage = multer.diskStorage({
@@ -316,6 +317,27 @@ router.get("/my_documents", async (req, res) => {
   console.log("Documents found:", documents);
   return res.status(200).json({
     documents: documents,
+  });
+});
+
+router.get("/documents", async (req, res) => {
+  const documentTemplates = await DocumentTemplate.find({});
+  return res.status(200).json({
+    documents: documentTemplates,
+  });
+});
+
+router.get("/documents/:id", async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: "Document ID not provided" });
+  }
+  const documentTemplate = await DocumentTemplate.findById(id);
+  if (!documentTemplate) {
+    return res.status(404).json({ message: "Document not found" });
+  }
+  return res.status(200).json({
+    document: documentTemplate,
   });
 });
 
