@@ -6,6 +6,11 @@ const roleSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  type: {
+    type: String,
+    required: true,
+    enum: ["user", "sef_dep", "sec_prim", "primar", "god"], // Example role types
+  },
   permissions: {
     type: [String],
     required: true,

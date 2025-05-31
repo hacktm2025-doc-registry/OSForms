@@ -46,22 +46,27 @@ const create_default_document = async () => {
   try {
     const documentExists = await Document.countDocuments();
     if (documentExists > 0) {
-      console.log("✅ Default document templates already exist, skipping creation.");
+      console.log(
+        "✅ Default document templates already exist, skipping creation."
+      );
       return;
     }
-    console.log("❗ No document templates found, creating default document templates.");
+    console.log(
+      "❗ No document templates found, creating default document templates."
+    );
     const defaultDocuments = default_documents.map((doc) => ({
       name: doc.name,
       description: doc.description || "", // Default to an empty string if no description is provided
       data: doc.data || {}, // Defa4ult to an empty object if no data is provided
       createdAt: doc.createdAt || Date.now(), // Default to current date if not provided
-      workflowStepType: doc.workflowStepType || [], // Ensure permissions is an array   
+      workflowStepType: doc.workflowStepType || [], // Ensure permissions is an array
       createdBy: doc.createdBy || "system", // Default to 'system' if no creator is specified
     }));
-    const defaultDocumentsInsert = await Document.insertMany(
-      defaultDocuments
+    const defaultDocumentsInsert = await Document.insertMany(defaultDocuments);
+    console.log(
+      "✅ Default document templates created:",
+      defaultDocumentsInsert
     );
-    console.log("✅ Default document templates created:", defaultDocumentsInsert);
   } catch (err) {
     console.error("❌ Error creating default document templates:", err);
   }
@@ -89,7 +94,8 @@ const connect = async () => {
       console.log("❗ No roles found, creating default roles.");
       const roles = default_roles.map((role) => ({
         ...role,
-        permissions: role.permissions || [], // Ensure permissions is an array
+        permissions: role.permissions || [],
+        type: role.type, // Ensure permissions is an array
       }));
       await Role.insertMany(roles);
       console.log("✅ Default roles created:", roles);
