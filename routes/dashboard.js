@@ -7,6 +7,8 @@ const router = express.Router();
 
 const File = require("../models/file.model"); // Assuming file.model.js is in the same directory
 
+// utils
+const { send_email } = require("../utils/helpers"); // Assuming helpers.js is in the utils directory
 // models
 const User = require("../models/user.model"); // Assuming user.model.js is in the same directory
 const Document = require("../models/documents.model"); // Assuming documents.model.js is in the same directory
@@ -125,11 +127,11 @@ router.post("/submit_form", async (req, res) => {
   if (!role === "user") {
     return res.status(403).json({ message: "Only user can submit form!" });
   }
-  let userila = await User.findOne({ role: role });
+  let petitioner = await User.findOne({ role: role });
   if (!userila) {
     return res.status(404).json({ message: "User not found" });
   }
-  console.log("User found:", userila);
+  console.log("User found:", petitioner);
 
   // Validate required fields
   if (!name || !data) {
@@ -149,37 +151,35 @@ router.post("/submit_form", async (req, res) => {
         {
           action: "initial_submit",
           timestamp: new Date(),
-          user: userila._id,
+          user: petitioner._id,
         },
       ],
     });
 
-    res
-      .status(201)
-      .json({
-        message: "Document created successfully",
-        document: newDocument,
-      });
+    res.status(201).json({
+      message: "Document created successfully",
+      document: newDocument,
+    });
   } catch (error) {
     console.error("Error creating document:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.get("/my_work", async (req, res) => {
+router.post("/my_work", async (req, res) => {
   const { role, name, description, data } = req.body;
   if (role === "user") {
     return res.status(403).json({ message: "Forbidden" });
   }
-  const userila = await User.findOne({ role: role });
-  if (!userila) {
+  const worker = await User.findOne({ role: role });
+  if (!worker) {
     return res.status(404).json({ message: "User not found" });
   }
-  console.log("User found:", userila);
+  console.log("User found:", worker);
 
   // const workflowEntities = await WorkflowEntity.find({ roles: userila.role });
   const my_WorkflowEntity = await WorkflowEntity.findOne({
-    roles: userila.role,
+    roles: worker.role,
   });
   console.log("Workflow entities found:", my_WorkflowEntity);
   const documents = await Document.find({
@@ -204,24 +204,22 @@ router.post("/action", async (req, res) => {
       .json({ message: "Role, action and document ID are required." });
   }
   if (role === "user") {
-    return res
-      .status(403)
-      .json({ message: "Only user can perform this action!" });
+    return res.status(403).json({ message: "User cannot perform actions!" });
   }
-  const userila = await User.findOne({ role: role });
-  if (!userila) {
+  const worker = await User.findOne({ role: role });
+  if (!worker) {
     return res.status(404).json({ message: "User not found" });
   }
   const my_WorkflowEntity = await WorkflowEntity.findOne({
-    roles: userila.role,
+    roles: worker.role,
   });
-  // console.log("Workflow entities found:", my_WorkflowEntity);
   if (!my_WorkflowEntity) {
     return res
       .status(404)
       .json({ message: "Workflow entity not found for this role" });
   }
-  const document = await Document.findById(doc_id);
+  const document = await Document.findOne({ _id: doc_id });
+  console.log("Document found:", document);
   if (!document) {
     return res.status(404).json({ message: "Document not found" });
   }
@@ -233,29 +231,79 @@ router.post("/action", async (req, res) => {
       .status(404)
       .json({ message: "No matching action found for this workflow step" });
   }
+  console.log("Matching workflow step found:", document.workflowStepType);
+  console.log("Action to perform:", match.type);
+  if (
+    document.workflowStepType !== my_WorkflowEntity.step_type &&
+    document.workflowStepType !== "initial_submit"
+  ) {
+    return res.status(400).json({
+      message: `Document is not in the correct step for action ${action}`,
+    });
+  }
 
-  await Document.updateOne(
+  let result = await Document.updateOne(
     { _id: doc_id },
     {
-      workflowStepType: match.type,
+      workflowStepType: match.type, // move to next step
       $push: {
         docHistory: {
           action: action,
           timestamp: new Date(),
-          user: userila._id,
+          user: worker._id,
         },
       },
     }
   );
-  res.status(200).json({
+  if (result.nModified === 0) {
+    return res.status(400).json({ message: "Document update failed" });
+  }
+
+  if (action === "acknowledge_doc" && worker.role === "primar") {
+    console.log("Acknowledging document:", document);
+    const petitioner = await User.findById(document.createdBy);
+    if (!petitioner) {
+      return res.status(404).json({ message: "Petitioner not found" });
+    }
+    send_email(
+      petitioner.email,
+      "Document Acknowledged",
+      `Your document ${document.name} has been acknowledged by ${worker.name}.`
+    );
+  }
+  console.log("Document updated successfully:", document);
+
+  return res.status(200).json({
     message: "Action performed successfully",
     nextStep: match,
   });
-  if (action === "acknowledge_doc" && userila.role === "primar") {
-    console.log("Acknowledging document:", document);
-    console.log("Send email to user:", userila.email);
-  }
-  console.log("Document updated successfully:", document);
 });
 
+
+router.get('/document', async(req, res) => {    
+  //get id from query params
+  const { role, id } = req.body;
+  let user = await User.findOne({role: role});
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  let document = await Document.findOne({ _id: id });
+  if (!document) {
+    return res.status(404).json({ message: "Document not found" });
+  }
+  console.log("Document found:", document);
+  let my_WorkflowEntity = await WorkflowEntity.findOne({
+    step_type: document.workflowStepType,
+  });
+  if (!my_WorkflowEntity) {
+    return res.status(404).json({ message: "Workflow entity not found" });
+  }
+  if (my_WorkflowEntity.roles.indexOf(user.role) === -1 || createdBy !== user._id.toString()) {
+    return res.status(403).json({ message: "You are not allowed to view this document" });
+  }
+  return res.status(200).json({
+    document: document,
+    workflowEntity: my_WorkflowEntity,
+  });
+})
 module.exports = router;
