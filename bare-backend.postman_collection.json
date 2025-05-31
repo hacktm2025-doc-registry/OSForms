@@ -448,15 +448,12 @@
 		},
 		{
 			"name": "[SECURE] Get sef dep work",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"role\": \"sef_dep\"\n}",
+					"raw": "{\n    \"role\": \"sec_prim\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -484,7 +481,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"role\" : \"primar\",\n    \"action\": \"acknowledge_doc\",\n    \"doc_id\" : \"683afca54118000025c53c04\"\n}",
+					"raw": "{\n    \"role\" : \"sef_dep\",\n    \"action\": \"submit_doc_to_sec_prim\",\n    \"doc_id\" : \"683b13418bdc1224bfe47138\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -502,6 +499,45 @@
 						"action"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Get document by USER",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/my_documents",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"my_documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
