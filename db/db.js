@@ -14,7 +14,8 @@ const default_roles = require("./default_roles.json"); // Assuming default_roles
 const default_workflow_steps_definition = require("./default_workflow_steps_definition.json"); // Assuming default_workflow_steps_definition.json is in the same directory
 const default_documents = require("./default_documents.json"); // Assuming default_documents.json is in the same directory
 const petitii_form = require("../forms/petitii.json");
-const uri = process.env.MONGODB_URI;
+const uri = "mongodb://"+ process.env.MONGODB_USER + ":" + process.env.MONGODB_PASSWORD + "@" + process.env.MONGODB_HOST + ":" + process.env.MONGODB_PORT + "/?authSource=admin&&directConnection=true"; // Example:
+
 
 const create_default_workflow = async () => {
   try {
@@ -104,8 +105,9 @@ const create_default_document_templates = async () => {
 
 const connect = async () => {
   try {
+    console.log("🔗 Connecting to MongoDB Atlas... " , uri);
     await mongoose.connect(uri);
-    console.log("✅ Connected to MongoDB Atlas");
+    console.log("✅ Connected to MongoDB!!!");
 
     const Roles = await Role.countDocuments();
     if (Roles === 0) {

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -9,7 +10,7 @@ const dashboardRoutes = require('./routes/dashboard');
 
 const cors = require('cors');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const db = connect(); // Initialize database connection
 // Middleware (optional)
