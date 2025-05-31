@@ -283,9 +283,9 @@ router.post("/action", async (req, res) => {
 router.get('/document', async(req, res) => {    
   //get id from query params
   const { role, id } = req.body;
-  let user = await User.findOne({role: role});
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  let worker = await User.findOne({role: role});
+  if (!worker) {
+    return res.status(404).json({ message: "worker not found" });
   }
   let document = await Document.findOne({ _id: id });
   if (!document) {
@@ -298,7 +298,7 @@ router.get('/document', async(req, res) => {
   if (!my_WorkflowEntity) {
     return res.status(404).json({ message: "Workflow entity not found" });
   }
-  if (my_WorkflowEntity.roles.indexOf(user.role) === -1 || createdBy !== user._id.toString()) {
+  if (my_WorkflowEntity.roles.indexOf(user.role) === -1 || createdBy !== worker._id.toString()) {
     return res.status(403).json({ message: "You are not allowed to view this document" });
   }
   return res.status(200).json({
@@ -306,4 +306,24 @@ router.get('/document', async(req, res) => {
     workflowEntity: my_WorkflowEntity,
   });
 })
+
+router.get('/my_documents', async(req, res) => {
+  const { role } = req.body;
+  if (!role) {
+    return res.status(400).json({ message: "Role not provided" });
+  }
+  let user = await User.findOne({role:role});
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  let documents = await Document.find({ createdBy: user._id });
+  if (!documents || documents.length === 0) {
+    return res.status(404).json({ message: "No documents found for this user" });
+  }
+  console.log("Documents found:", documents);
+  return res.status(200).json({
+    documents: documents,
+  });
+})
+
 module.exports = router;
