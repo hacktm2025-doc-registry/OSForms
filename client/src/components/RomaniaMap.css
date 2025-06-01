@@ -1,0 +1,10 @@
+.romania-map path {
+  fill: #ccc; /* Default grey color */
+  stroke: #333;
+  stroke-width: 0.5;
+  transition: fill 0.3s ease;
+}
+
+.romania-map path.highlighted {
+  fill: #1976d2; /* Highlight color */
+}

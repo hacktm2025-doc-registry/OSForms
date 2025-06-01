@@ -1,0 +1,33 @@
+.form-builder-wrapper {
+    /* Ensure the builder takes appropriate width */
+    width: 100%;
+    /* Add some visual separation */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background-color: var(--bg-light); /* Light background for the builder area */
+}
+
+/* Override some Form.io default styles if they don't fit your theme */
+/* You might need to inspect the elements to get the exact selectors */
+.formio-component-panel,
+.formio-component-fieldset {
+    background-color: #fff; /* Ensure internal components have a white background */
+}
+
+/* Adjust button styles within Form.io forms if needed */
+.formio-component-button button {
+    /* Example: Make formio buttons match your app's button style */
+    /* width: auto !important; */
+    /* min-width: 150px; */
+}
+
+/* Success message style */
+.success-message {
+    color: #155724; /* Dark green */
+    background-color: #d4edda; /* Light green */
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
