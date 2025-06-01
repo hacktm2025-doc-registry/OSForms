@@ -1,0 +1,50 @@
+@startuml
+
+actor cetatean
+agent browser
+
+cetatean -> browser
+
+actor cet2 as "alt cetatean"
+
+agent bro2 as "browser"
+
+cet2 -> bro2
+
+cloud "Cloud privat CJT" {
+
+    node "Primaria Dumbravita" {
+         component "backend_dumbravita"
+         component "frontend_dumbravita"
+         database "mongo_dumbravita"
+
+         frontend_dumbravita -- backend_dumbravita : queries
+         backend_dumbravita -- mongo_dumbravita : read/write
+    }
+
+    node "Primaria Giarmata" {
+         component "backend_giarmata"
+         component "frontend_giarmata"
+         database "mongo_giarmata"
+
+         frontend_giarmata -- backend_giarmata : queries
+         backend_giarmata -- mongo_giarmata : read/write
+    }
+
+    node "Primaria Nadragu" {
+         component "backend_nadragu"
+         component "frontend_nadragu"
+         database "mongo_nadragu"
+
+         frontend_nadragu -- backend_nadragu : queries
+         backend_nadragu -- mongo_nadragu : read/write
+    }
+}
+
+browser -do-> frontend_dumbravita
+browser -do-> frontend_giarmata
+
+bro2 -do-> frontend_nadragu
+
+
+@enduml
