@@ -19,7 +19,7 @@ function Login() {
         setLoading(true); // Set loading state to true
 
         try {
-            const backendUrl =  `${BACKEND_BASE_URL}/auth/login`; // New backend endpoint
+            const backendUrl =  `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/auth/login`; // New backend endpoint
 
             const response = await fetch(backendUrl, {
                 method: 'POST',

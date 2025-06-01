@@ -1,13 +1,13 @@
 services:
   hack_tm_server:
     build:
-      context: .
+      context: server
       target: hack_tm_server
     container_name: ${INSTANCE_NAME}_hack_tm_server
     ports:
       - "${HOST_PORT:-3000}:3000"
     volumes:
-      - .:/app
+      - ./server:/app
       - /app/node_modules
     env_file:
       - .env.${INSTANCE_NAME}
@@ -22,6 +22,23 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - "mongodb_data:/data/db"
+
+  hack_tm_client:
+    build:
+      context: client
+      target: hack_tm_client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - HOST=0.0.0.0
+    env_file:
+      - .env.${INSTANCE_NAME}
+    command: ["npm",  "run",  "dev", "--", "--host"]
+    depends_on:
+      - hack_tm_server
 
 volumes:
   mongodb_data:

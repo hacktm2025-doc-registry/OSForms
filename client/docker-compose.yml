@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  vite-app:
+    build:
+      context: .
+      target: hack_tm_client
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - HOST=0.0.0.0
+    command: ["npm",  "run",  "dev", "--", "--host"]

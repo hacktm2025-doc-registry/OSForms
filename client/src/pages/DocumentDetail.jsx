@@ -20,7 +20,7 @@ function DocumentDetail() {
                 setLoading(true);
                 setError(null);
 
-                const url = `${BACKEND_BASE_URL}/dashboard/document?id=${id}`;
+                const url = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/dashboard/document?id=${id}`;
                 
                 console.log('Frontend: Fetching document details from:', url);
 

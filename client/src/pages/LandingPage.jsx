@@ -30,7 +30,7 @@ function LandingPage() {
     useEffect(() => {
         const fetchCountiesFromBackend = async () => {
             try {
-                const backendUrl = 'http://192.168.1.58:3000/api/data/counties';
+                const backendUrl = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/api/data/counties`;
                 const response = await fetch(backendUrl);
                 const data = await response.json();
 

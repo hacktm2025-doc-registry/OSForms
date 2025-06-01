@@ -30,7 +30,7 @@ function Register() {
         }
 
         try {
-            const backendUrl = 'http://192.168.1.209:3000/auth/signup';
+            const backendUrl = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/auth/signup`;
 
             const response = await fetch(backendUrl, {
                 method: 'POST',

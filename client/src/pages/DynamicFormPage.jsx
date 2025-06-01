@@ -10,7 +10,7 @@ function DynamicFormPage() {
   useEffect(() => {
     async function fetchFormData() {
       try {
-        const backendUrl = `${BACKEND_BASE_URL}/dashboard/documents`;
+        const backendUrl = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/dashboard/documents`;
         const allDocumentTemplatesFetcher = await fetch(backendUrl, {
                   method: 'GET',
                   headers: {
@@ -19,7 +19,7 @@ function DynamicFormPage() {
               });
         const documentsTemplates = await allDocumentTemplatesFetcher.json();
         console.log('All Document Templates:', documentsTemplates);
-        const myDocumentFetcher = await fetch(`${backendUrl}/${documentsTemplates.documents[0]._id}`, {
+        const myDocumentFetcher = await fetch(`http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/${documentsTemplates.documents[0]._id}`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',

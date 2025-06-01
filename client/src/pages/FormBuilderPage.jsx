@@ -17,7 +17,7 @@ function FormBuilderPage() {
     const [successMessage, setSuccessMessage] = useState('');
     const [isEditMode, setIsEditMode] = useState(false); // To distinguish create vs. edit
 
-    const backendBaseUrl = `${BACKEND_BASE_URL}/api/forms`; // Your backend API endpoint for forms
+    const backendBaseUrl = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/api/forms`; // Your backend API endpoint for forms
 
     useEffect(() => {
         // If formId is present, we are in edit mode, so load the form
@@ -28,7 +28,7 @@ function FormBuilderPage() {
             setSuccessMessage('');
             const fetchForm = async () => {
                 try {
-                    const response = await fetch(`${backendBaseUrl}/${formId}`);
+                    const response = await fetch(`http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/${formId}`);
                     const data = await response.json();
                     if (response.ok) {
                         setFormTitle(data.title);

@@ -25,7 +25,8 @@ function ConfirmEmail() {
 
             try {
                 // Backend endpoint for email confirmation
-                const backendConfirmUrl = `http://192.168.1.209:3000/confirm?token=${token}`; // Your backend's confirmation endpoint
+                // const backendConfirmUrl = `http://192.168.1.209:3000/confirm?token=${token}`; // Your backend's confirmation endpoint
+                const backendConfirmUrl = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/confirm?token=${token}`;
 
                 const response = await fetch(backendConfirmUrl, {
                     method: 'GET', // Or POST, depending on your backend's API design for confirmation

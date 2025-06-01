@@ -23,7 +23,7 @@ function DashboardPage() {
                 setLoading(true);
                 setError(null);
 
-                const url = `${BACKEND_BASE_URL}/dashboard/my_documents?role=${selectedRole}`;
+                const url = `http://${import.meta.env.VITE_SERVER_URL}:${import.meta.env.VITE_SERVER_PORT}/dashboard/my_documents?role=${selectedRole}`;
                 
                 console.log('Frontend: Attempting to fetch documents from:', url);
 
