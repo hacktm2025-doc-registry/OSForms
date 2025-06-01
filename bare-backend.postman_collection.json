@@ -453,7 +453,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"role\": \"sec_prim\"\n}",
+					"raw": "{\n    \"role\": \"sef_dep\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -481,7 +481,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"role\" : \"sef_dep\",\n    \"action\": \"submit_doc_to_sec_prim\",\n    \"doc_id\" : \"683b13418bdc1224bfe47138\"\n}",
+					"raw": "{\n    \"role\" : \"primar\",\n    \"action\": \"acknowledge_doc\",\n    \"doc_id\" : \"683b24e4094b592fb011bfa7\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -504,11 +504,8 @@
 		},
 		{
 			"name": "[SECURE] Get document by USER",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -534,10 +531,33 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "[SECURE] Get my user data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"profile"
+					]
+				}
 			},
 			"response": []
 		}

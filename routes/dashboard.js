@@ -267,7 +267,7 @@ router.post("/action", async (req, res) => {
   });
 });
 
-router.get("/document", async (req, res) => {
+router.post("/document", async (req, res) => {
   //get id from query params
   const { role, id } = req.body;
   let worker = await User.findOne({ role: role });
@@ -299,7 +299,7 @@ router.get("/document", async (req, res) => {
   });
 });
 
-router.get("/my_documents", async (req, res) => {
+router.post("/my_documents", async (req, res) => {
   const { role } = req.body;
   if (!role) {
     return res.status(400).json({ message: "Role not provided" });
@@ -320,7 +320,7 @@ router.get("/my_documents", async (req, res) => {
   });
 });
 
-router.get("/documents", async (req, res) => {
+router.post("/all_documents", async (req, res) => {
   const documentTemplates = await DocumentTemplate.find({});
   return res.status(200).json({
     documents: documentTemplates,
