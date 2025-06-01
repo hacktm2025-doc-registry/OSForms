@@ -1,0 +1,31 @@
+@startuml
+
+actor cetatean
+participant browser as browserc
+actor responsabil
+participant browser as browserr
+actor secretar
+participant browser as browsers
+actor primar
+participant browser as browserp
+
+participant frontend
+
+cetatean -> browserc : completeaza petitie
+browserc -> frontend : trimite petitie
+note right of frontend
+Toti participantii interactioneaza
+cu acelasi frontend
+end note
+responsabil -> browserr : deschide petitie si adauga raspuns
+browserr -> frontend : salveaza raspunsul
+secretar -> browsers : deschide petitie si aproba
+browsers -> frontend : salveaza aprobarea
+note right of frontend
+Accesul e controlat prin intermediul configuratiei de
+roluri, departamente, compartimente etc.
+end note
+primar -> browserp : deschide petitie si semneaza de luare la cunostinta
+browserp -> frontend : salveaza semnatura
+
+@enduml
