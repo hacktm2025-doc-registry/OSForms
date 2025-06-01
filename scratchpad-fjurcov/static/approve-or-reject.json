@@ -1,0 +1,190 @@
+{
+  "display": "form",
+  "components": [
+    {
+      "label": " ",
+      "placeholder": "Prenume",
+      "applyMaskOn": "change",
+      "hideLabel": true,
+      "tableView": true,
+      "clearOnHide": false,
+      "validate": {
+        "required": true
+      },
+      "validateWhenHidden": false,
+      "key": "firstname",
+      "logic": [
+        {
+          "name": "readonlyWhen",
+          "trigger": {
+            "type": "javascript",
+            "javascript": "data.userrole != \"citizen\""
+          },
+          "actions": []
+        }
+      ],
+      "attributes": {
+        "readonly": "true"
+      },
+      "type": "textfield",
+      "input": true
+    },
+    {
+      "label": " ",
+      "placeholder": "Nume de familie",
+      "applyMaskOn": "change",
+      "hideLabel": true,
+      "spellcheck": false,
+      "tableView": false,
+      "validate": {
+        "required": true
+      },
+      "validateWhenHidden": false,
+      "key": "lastname",
+      "logic": [
+        {
+          "name": "readonlyWhen",
+          "trigger": {
+            "type": "javascript",
+            "javascript": "data.userrole != \"citizen\""
+          },
+          "actions": []
+        }
+      ],
+      "attributes": {
+        "readonly": "true"
+      },
+      "type": "textfield",
+      "input": true
+    },
+    {
+      "label": "Text Area",
+      "placeholder": "Conținutul petiției",
+      "applyMaskOn": "change",
+      "autoExpand": false,
+      "showCharCount": true,
+      "spellcheck": false,
+      "tableView": false,
+      "validate": {
+        "required": true,
+        "maxLength": 1000
+      },
+      "validateWhenHidden": false,
+      "key": "petition",
+      "attributes": {
+        "readonly": "true"
+      },
+      "type": "textarea",
+      "input": true
+    },
+    {
+      "label": " ",
+      "placeholder": "Răspuns",
+      "applyMaskOn": "change",
+      "autoExpand": false,
+      "hideLabel": true,
+      "spellcheck": false,
+      "tableView": false,
+      "validate": {
+        "required": true
+      },
+      "validateWhenHidden": false,
+      "key": "answer",
+      "attributes": {
+        "readonly": "true"
+      },
+      "type": "textarea",
+      "input": true
+    },
+    {
+      "label": "Radio",
+      "optionsLabelPosition": "right",
+      "inline": false,
+      "tableView": false,
+      "values": [
+        {
+          "label": "Soluție acceptată",
+          "value": "accepted",
+          "shortcut": ""
+        },
+        {
+          "label": "Soluție neacceptată",
+          "value": "rejected",
+          "shortcut": ""
+        }
+      ],
+      "validate": {
+        "required": true,
+        "onlyAvailableItems": true
+      },
+      "validateWhenHidden": false,
+      "key": "resolution",
+      "type": "radio",
+      "input": true
+    },
+    {
+      "label": "Finalizează",
+      "showValidations": false,
+      "tableView": false,
+      "key": "finalize",
+      "type": "button",
+      "input": true,
+      "saveOnEnter": false
+    },
+    {
+      "label": " ",
+      "placeholder": "Motivare",
+      "applyMaskOn": "change",
+      "autoExpand": false,
+      "hidden": true,
+      "tableView": true,
+      "validate": {
+        "custom": "!(data.resolution === \"rejected\" && (!input || input.length === \"\"])"
+      },
+      "validateWhenHidden": false,
+      "key": "motivation",
+      "conditional": {
+        "show": true,
+        "when": "resolution",
+        "eq": "rejected"
+      },
+      "type": "textarea",
+      "input": true
+    },
+    {
+      "label": "user-role",
+      "applyMaskOn": "change",
+      "hidden": true,
+      "tableView": true,
+      "validateWhenHidden": false,
+      "key": "userrole",
+      "type": "textfield",
+      "input": true
+    },
+    {
+      "label": "petition-id",
+      "applyMaskOn": "change",
+      "hidden": true,
+      "tableView": true,
+      "validateWhenHidden": false,
+      "key": "petitionId",
+      "type": "textfield",
+      "input": true
+    },
+    {
+      "label": "status",
+      "applyMaskOn": "change",
+      "hidden": true,
+      "spellcheck": false,
+      "tableView": false,
+      "validate": {
+        "required": true
+      },
+      "validateWhenHidden": false,
+      "key": "status",
+      "type": "textfield",
+      "input": true,
+      "defaultValue": "new"
+    }
+  ]
+}

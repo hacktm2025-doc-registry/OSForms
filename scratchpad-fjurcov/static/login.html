@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dropdown and Role Cookie</title>
+    <script>
+        function handleSelection() {
+            const select = document.getElementById("people");
+            const selectedValue = select.value; // e.g., "Ion Popescu|citizen"
+            const role = selectedValue.split('|')[1]; // Get "citizen" or "clerk"
+
+            // Set the cookie (expires in 1 day)
+            document.cookie = "role=" + encodeURIComponent(role) + "; path=/; max-age=86400";
+
+            // Redirect to main.html
+            window.location.href = "main.html";
+        }
+    </script>
+</head>
+<body>
+
+    <label for="people">Select a person:</label>
+    <select id="people" name="people">
+        <option value="Ion Popescu|citizen">Ion Popescu</option>
+        <option value="Vasile Funcționaru|clerk">Vasile Funcționaru</option>
+        <option value="George Secretescu|secretary">George Secretescu</option>
+        <option value="Silviu Primărescu|mayor">Silviu Primărescu</option>
+    </select>
+
+    <button onclick="handleSelection()">Autentificare</button>
+
+</body>
+</html>

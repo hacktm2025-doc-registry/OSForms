@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_02kmua1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.6.1">
+  <bpmn:collaboration id="collaborationPetitionApproval">
+    <bpmn:participant id="mayorsOffice" name="Primărie" processRef="petitionProcess" />
+    <bpmn:textAnnotation id="roleAnnotationCitizen">
+      <bpmn:text>Cetățean</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="roleAnnotationClerk">
+      <bpmn:text>Responsabil desemnat</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="roleAnnotationSecretary">
+      <bpmn:text>Secretar</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="decisionAnnotationReject">
+      <bpmn:text>Respinge soluția</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="roleAnnotationMayor">
+      <bpmn:text>Primar</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="decisionAnnotationApprove">
+      <bpmn:text>Aprobă soluția</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1egyk7d" associationDirection="None" sourceRef="flowReject" targetRef="decisionAnnotationReject" />
+    <bpmn:association id="Association_1nrzp0q" associationDirection="None" sourceRef="flowApprove" targetRef="decisionAnnotationApprove" />
+    <bpmn:association id="Association_190ystb" associationDirection="None" sourceRef="usertaskCitizenSubmitting" targetRef="roleAnnotationCitizen" />
+    <bpmn:association id="Association_0mhxukw" associationDirection="None" sourceRef="usertaskClerkProcessing" targetRef="roleAnnotationClerk" />
+    <bpmn:association id="Association_0sfoyqo" associationDirection="None" sourceRef="usertaskSecretaryApproval" targetRef="roleAnnotationSecretary" />
+    <bpmn:association id="Association_0qpljru" associationDirection="None" sourceRef="usertaskMayorAcknowledge" targetRef="roleAnnotationMayor" />
+  </bpmn:collaboration>
+  <bpmn:process id="petitionProcess" isExecutable="true">
+    <bpmn:startEvent id="startEvent">
+      <bpmn:outgoing>flowStart</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="usertaskCitizenSubmitting" name="Completează petiția">
+      <bpmn:incoming>flowStart</bpmn:incoming>
+      <bpmn:outgoing>flowSubmit</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="usertaskClerkProcessing" name="Validează, propune răspunsul">
+      <bpmn:incoming>flowSubmit</bpmn:incoming>
+      <bpmn:incoming>flowReject</bpmn:incoming>
+      <bpmn:outgoing>flowAnswer</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="usertaskSecretaryApproval" name="Aprobă sau rejectează răspunsul">
+      <bpmn:incoming>flowAnswer</bpmn:incoming>
+      <bpmn:outgoing>flowToDecision</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="secretaryDecision">
+      <bpmn:incoming>flowToDecision</bpmn:incoming>
+      <bpmn:outgoing>flowReject</bpmn:outgoing>
+      <bpmn:outgoing>flowApprove</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="usertaskMayorAcknowledge" name="Ia la cunoștință">
+      <bpmn:incoming>flowApprove</bpmn:incoming>
+      <bpmn:outgoing>flowEnd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="endEvent">
+      <bpmn:incoming>flowEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="flowStart" sourceRef="startEvent" targetRef="usertaskCitizenSubmitting" />
+    <bpmn:sequenceFlow id="flowSubmit" sourceRef="usertaskCitizenSubmitting" targetRef="usertaskClerkProcessing" />
+    <bpmn:sequenceFlow id="flowApprove" sourceRef="secretaryDecision" targetRef="usertaskMayorAcknowledge">
+		<bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[decision === 'approve']]></bpmn:conditionExpression>
+	</bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="flowReject" sourceRef="secretaryDecision" targetRef="usertaskClerkProcessing">
+		<bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[decision === 'reject']]></bpmn:conditionExpression>
+	</bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="flowAnswer" sourceRef="usertaskClerkProcessing" targetRef="usertaskSecretaryApproval" />
+    <bpmn:sequenceFlow id="flowToDecision" sourceRef="usertaskSecretaryApproval" targetRef="secretaryDecision" />
+    <bpmn:sequenceFlow id="flowEnd" sourceRef="usertaskMayorAcknowledge" targetRef="endEvent" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="collaborationPetitionApproval">
+      <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+        <dc:Bounds x="232" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="usertaskCitizenSubmitting_di" bpmnElement="usertaskCitizenSubmitting">
+        <dc:Bounds x="340" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_09cia5a" bpmnElement="usertaskClerkProcessing">
+        <dc:Bounds x="430" y="310" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_00t53op" bpmnElement="usertaskSecretaryApproval">
+        <dc:Bounds x="540" y="440" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="secretaryDecision_di" bpmnElement="secretaryDecision" isMarkerVisible="true">
+        <dc:Bounds x="795" y="455" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0djzia6" bpmnElement="usertaskMayorAcknowledge">
+        <dc:Bounds x="870" y="580" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEvent_di" bpmnElement="endEvent">
+        <dc:Bounds x="1062" y="602" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flowStart_di" bpmnElement="flowStart">
+        <di:waypoint x="268" y="190" />
+        <di:waypoint x="340" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowSubmit_di" bpmnElement="flowSubmit">
+        <di:waypoint x="390" y="230" />
+        <di:waypoint x="390" y="350" />
+        <di:waypoint x="430" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowReject_di" bpmnElement="flowReject">
+        <di:waypoint x="820" y="455" />
+        <di:waypoint x="820" y="350" />
+        <di:waypoint x="530" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowAnswer_di" bpmnElement="flowAnswer">
+        <di:waypoint x="480" y="390" />
+        <di:waypoint x="480" y="480" />
+        <di:waypoint x="540" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowToDecision_di" bpmnElement="flowToDecision">
+        <di:waypoint x="640" y="480" />
+        <di:waypoint x="795" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowApprove_di" bpmnElement="flowApprove">
+        <di:waypoint x="820" y="505" />
+        <di:waypoint x="820" y="620" />
+        <di:waypoint x="870" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowEnd_di" bpmnElement="flowEnd">
+        <di:waypoint x="970" y="620" />
+        <di:waypoint x="1062" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0sfoyqo_di" bpmnElement="Association_0sfoyqo">
+        <di:waypoint x="608" y="440" />
+        <di:waypoint x="615" y="426" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0mhxukw_di" bpmnElement="Association_0mhxukw">
+        <di:waypoint x="501" y="310" />
+        <di:waypoint x="506" y="301" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_190ystb_di" bpmnElement="Association_190ystb">
+        <di:waypoint x="415" y="150" />
+        <di:waypoint x="423" y="136" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1egyk7d_di" bpmnElement="Association_1egyk7d">
+        <di:waypoint x="727.5" y="350" />
+        <di:waypoint x="750" y="339" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1nrzp0q_di" bpmnElement="Association_1nrzp0q">
+        <di:waypoint x="820" y="587.5" />
+        <di:waypoint x="810" y="590" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0qpljru_di" bpmnElement="Association_0qpljru">
+        <di:waypoint x="945" y="580" />
+        <di:waypoint x="953" y="566" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="roleAnnotationSecretary_di" bpmnElement="roleAnnotationSecretary">
+        <dc:Bounds x="570" y="400" width="99.99656781987919" height="26.359143327841846" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="roleAnnotationClerk_di" bpmnElement="roleAnnotationClerk">
+        <dc:Bounds x="470" y="260" width="99.99656781987919" height="40.637012630422845" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="roleAnnotationCitizen_di" bpmnElement="roleAnnotationCitizen">
+        <dc:Bounds x="380" y="110" width="99.99656781987919" height="26.359143327841846" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="decisionAnnotationReject_di" bpmnElement="decisionAnnotationReject">
+        <dc:Bounds x="750" y="300" width="99.99274099883856" height="40.65040650406504" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="decisionAnnotationApprove_di" bpmnElement="decisionAnnotationApprove">
+        <dc:Bounds x="710" y="590" width="99.99274099883856" height="29.991774608864603" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="roleAnnotationMayor_di" bpmnElement="roleAnnotationMayor">
+        <dc:Bounds x="910" y="540" width="99.9908531059085" height="26.359143327841846" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
