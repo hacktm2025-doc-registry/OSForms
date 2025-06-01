@@ -1,0 +1,33 @@
+[
+
+    {
+        "step_name": "Department Head Review",
+        "step_type": "dep_sef_review",
+        "step_description": "Review by the department head",
+        "next_steps": [{"type": "sec_prim_review", "on": "submit_doc_to_sec_prim"}],
+        "proceed_to_next_step_event": "submit_doc_to_sec_prim",
+        "roles": ["sef_dep"]
+    },
+    {
+        "step_name": "Sec prim Review",
+        "step_type": "sec_prim_review",
+        "step_description": "Review by the Primary Secretary",
+        "next_steps": [{"type":"prim_review", "on" : "submit_doc_to_prim"}, {"type":"dep_sef_review", "on" : "reject_doc_to_dep_sef"}],
+        "proceed_to_next_step_event": "submit_doc_to_sec_prim",
+        "roles": ["sec_prim"]
+    },
+    {
+        "step_name": "Prim Review",
+        "step_type": "prim_review",
+        "step_description": "Review and closing by the Mayor",
+        "next_steps": [{"type":"final_step", "on" : "acknowledge_doc"}],
+        "roles": ["primar"]
+    },
+    {
+        "step_name": "Acknowledge Document",
+        "step_type": "final_step",
+        "step_description": "Reviewed and closed by the Mayor",
+        "next_steps": [null],
+        "roles": null
+    }
+]

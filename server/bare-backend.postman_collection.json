@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "ff9d43df-44df-49ce-9cfa-94cb910bff81",
+		"name": "bare-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8106859"
+	},
+	"item": [
+		{
+			"name": "Alive",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignUP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  const jsonData = pm.response.json();",
+							"  if (jsonData.emailVerificationToken) {",
+							"    pm.environment.set(\"emailVerificationToken\", jsonData.emailVerificationToken);",
+							"    console.log(\"✅ emailVerificationToken set:\", jsonData.emailVerificationToken);",
+							"  } else {",
+							"    console.warn(\"⚠️ emailVerificationToken not found in response\");",
+							"  }",
+							"} catch (e) {",
+							"  console.error(\"❌ Failed to parse JSON response\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"roberto@rob.com\",\n    \"password\" : \"roberto\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/confirm?token={{emailVerificationToken}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"confirm"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{emailVerificationToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SingIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  const jsonData = pm.response.json();",
+							"  if (jsonData.token) {",
+							"    pm.environment.set(\"authToken\", jsonData.token);",
+							"    console.log(\"✅ authToken set:\", jsonData.token);",
+							"  } else {",
+							"    console.warn(\"⚠️ Token not found in response\");",
+							"  }",
+							"} catch (e) {",
+							"  console.error(\"❌ Failed to parse JSON response\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"roberto@rob.com\",\n    \"password\" : \"roberto\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/signin",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  const jsonData = pm.response.json();",
+							"  if (jsonData.token) {",
+							"    pm.environment.set(\"resetToken\", jsonData.token);",
+							"    console.log(\"✅ resetToken set:\", jsonData.token);",
+							"  } else {",
+							"    console.warn(\"⚠️ resetToken not found in response\");",
+							"  }",
+							"} catch (e) {",
+							"  console.error(\"❌ Failed to parse JSON response\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/reset?email=roberto@rob.com",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reset"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "roberto@rob.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password ACTION",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\" : \"roberto\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/reset?token={{resetToken}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reset"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "{{resetToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/dashboard",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Dashboard Profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/dashboard/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[DEBUG] Get AdminToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  const jsonData = pm.response.json();",
+							"  if (jsonData.token) {",
+							"    pm.environment.set(\"adminToken\", jsonData.token);",
+							"    console.log(\"✅ adminToken set:\", jsonData.token);",
+							"  } else {",
+							"    console.warn(\"⚠️ adminToken not found in response\");",
+							"  }",
+							"} catch (e) {",
+							"  console.error(\"❌ Failed to parse JSON response\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/adminToken",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"adminToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[ADMIN] SignUP Admin User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"test_add_admin@admin.com\",\n    \"password\" : \"administrator\",\n    \"adminToken\" : \"{{adminToken}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Upload file",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/rosca/Downloads/dummy.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/upload",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] GET FILES",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/dashboard/files",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[USER] Submit Document",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"user\",\n    \"data\": \"formulasar asfnaviuhv dfjvd \",\n    \"name\" : \"DOCUMENT MOMUMENT ROB\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/submit_form",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"submit_form"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Get sef dep work",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\": \"sef_dep\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/my_work",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"my_work"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] DO ACTION",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"primar\",\n    \"action\": \"acknowledge_doc\",\n    \"doc_id\" : \"683b24e4094b592fb011bfa7\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/action",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"action"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Get document by USER",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/my_documents",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"my_documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[SECURE] Get my user data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"role\" : \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/dashboard/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dashboard",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
