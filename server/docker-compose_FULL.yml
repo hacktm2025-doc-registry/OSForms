@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # === Backend ===
+  hack_tm_server:
+    image: hack_tm_server
+    container_name: ${INSTANCE_NAME}_hack_tm_server
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    env_file:
+      - .env.${INSTANCE_NAME}
+    depends_on:
+      - mongodb
+
+  # === MongoDB ===
+  mongodb:
+    image: mongo:7
+    container_name: ${INSTANCE_NAME}_mongodb
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - "mongodb_data:/data/db"
+
+  # === Frontend ===
+  frontend:
+    image: frontend_tm_2025-frontend
+    container_name: ${INSTANCE_NAME}_vite_frontend_dev
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host
+    depends_on:
+      - hack_tm_server
+
+volumes:
+  mongodb_data:
+    external: true
+    name: ${INSTANCE_NAME}_mongo_data

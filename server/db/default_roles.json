@@ -1,0 +1,35 @@
+[
+  {
+    "type": "user",
+    "name": "Cetatean",
+    "permissions": ["read", "edit_firsthand", "submit"]
+  },
+  {
+    "type": "sef_dep",
+    "name": "Sef de departament",
+    "permissions": ["read", "edit_response", "submit"]
+  },
+  {
+    "type": "sec_prim",
+    "name": "Secretar primarie",
+    "permissions": ["read", "approve", "reject"]
+  },
+  {
+    "type": "primar",
+    "name": "Primar",
+    "permissions": ["acknowledge"]
+  },
+  {
+    "type": "god",
+    "name": "god",
+    "permissions": [
+      "read",
+      "edit_firsthand",
+      "submit",
+      "edit_response",
+      "approve",
+      "reject",
+      "acknowledge"
+    ]
+  }
+]

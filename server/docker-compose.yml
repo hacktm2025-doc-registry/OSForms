@@ -1,0 +1,29 @@
+services:
+  hack_tm_server:
+    build:
+      context: .
+      target: hack_tm_server
+    container_name: ${INSTANCE_NAME}_hack_tm_server
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.${INSTANCE_NAME}
+
+  mongodb:
+    image: mongo:7
+    container_name: ${INSTANCE_NAME}_mongodb
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - "mongodb_data:/data/db"
+
+volumes:
+  mongodb_data:
+    external: true
+    name: ${INSTANCE_NAME}_mongo_data
